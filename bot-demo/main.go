@@ -27,23 +27,23 @@ func printCommandEvents(analyticsChannel <-chan *slacker.CommandEvent) {
 }
 
 func main() {
-	// Load environment variables from .env file
+	
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Error loading .env file")
 	}
 
-	// Create a new Slack bot client
+	
 	bot := slacker.NewClient(os.Getenv("SLACK_BOT_TOKEN"), os.Getenv("SLACK_APP_TOKEN"))
 	fmt.Println("SLACK_BOT_TOKEN:", os.Getenv("SLACK_BOT_TOKEN"))
 	fmt.Println("SLACK_APP_TOKEN:", os.Getenv("SLACK_APP_TOKEN"))
 
 	client := witai.NewClient((os.Getenv("WIT_AI_TOKEN")))
 	wolframClient := &wolfram.Client{AppID: os.Getenv("WOLFRAM_APP_ID")}
-	// Start a goroutine to print command events
+
 	go printCommandEvents(bot.CommandEvents())
 
-	// Define a new command
+
 	bot.Command("query for bot - <message>", &slacker.CommandDefinition{
 		Description: "Send any question to Wolfram",
 
@@ -68,7 +68,6 @@ func main() {
 		},
 	})
 
-	// Create a context for the bot to run
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
